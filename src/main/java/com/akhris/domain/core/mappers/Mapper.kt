@@ -4,7 +4,7 @@ package com.akhris.domain.core.mappers
 /**
  * Mapper class that maps A to B using [IMapper] objects.
  */
-class Mapper<A, B>(
+open class Mapper<A, B>(
     private val toMapper: IMapper<A, B>,
     private val fromMapper: IMapper<B, A>
 ) {

@@ -5,19 +5,6 @@ plugins {
 }
 
 group='com.github.akhris'
-//version '1.0-SNAPSHOT'
-
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            groupId = 'com.akhris.domain'
-//            artifactId = 'domain-core'
-//            version = '0.0.1'
-//
-//            from components.java
-//        }
-//    }
-//}
 
 repositories {
     mavenCentral()
