@@ -20,6 +20,9 @@ fun <T> Result<T>.unpack(whatNotFoundInRepo: String): T = when (this) {
 }
 
 /**
- * Unpacks list of results to list of values or empty list if there is no [Result.Success]
+ * Unpacks list of results to list of values or empty list
  */
-fun <T> List<Result<T>>.unpack(): List<T> = mapNotNull { it.unpack() }
+fun <T> Result<List<T>>.unpack(): List<T> = when (this) {
+    is Result.Success -> value
+    else -> listOf()
+}
