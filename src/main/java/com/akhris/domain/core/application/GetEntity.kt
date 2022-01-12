@@ -5,6 +5,11 @@ import com.akhris.domain.core.entities.IEntity
 import com.akhris.domain.core.repository.IRepository
 import kotlinx.coroutines.CoroutineDispatcher
 
+
+/**
+ * Base use case to get [IEntity] from [IRepository] by ID.
+ * May be overridden for more complex use cases.
+ */
 open class GetEntity<ID, ENTITY : IEntity<ID>>(
     private val repo: IRepository<ID, ENTITY>,
     @IoDispatcher

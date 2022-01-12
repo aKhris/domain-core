@@ -3,8 +3,16 @@ package com.akhris.domain.core.application
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-
+/**
+ * Base use case class that run some operation in coroutine.
+ * [R] - resulting item of operation, usually some Entity class.
+ * [P] - input parameters class for operation
+ */
 abstract class UseCase<out R, in P>(private val coroutineDispatcher: CoroutineDispatcher) where R : Any {
+    /**
+     * operator fun that runs the operation. If operation throws exception - returns [Result.Failure], otherwise
+     * return [Result.Success]
+     */
     suspend operator fun invoke(params: P): Result<R> {
         return try {
             // Moving all use case's executions to the injected dispatcher
