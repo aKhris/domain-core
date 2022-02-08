@@ -17,7 +17,7 @@ open class InsertEntity<ID, ENTITY : IEntity<ID>>(
 
     override suspend fun run(params: Params<ENTITY>): ENTITY {
         return when (params) {
-            is Update -> insert(params.entityToInsert)
+            is Insert -> insert(params.entityToInsert)
         }
     }
 
@@ -27,6 +27,6 @@ open class InsertEntity<ID, ENTITY : IEntity<ID>>(
     }
 
     sealed class Params<T>
-    data class Update<E>(val entityToInsert: E) : Params<E>()
+    data class Insert<E>(val entityToInsert: E) : Params<E>()
 
 }

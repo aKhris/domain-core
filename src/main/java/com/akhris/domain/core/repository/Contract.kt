@@ -11,7 +11,15 @@ interface IRepository<ID, ENTITY : IEntity<ID>> {
     suspend fun remove(t: ENTITY)
     suspend fun update(t: ENTITY)
     suspend fun insert(t: ENTITY)
+    suspend fun remove(specification: ISpecification)
+    suspend fun query(specification: ISpecification): List<ENTITY>
 }
+
+/**
+ * Marker interface for querying list of data from repository
+ * https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006
+ */
+interface ISpecification
 
 /**
  * Result sealed class that is used in [IRepositoryCallback].
