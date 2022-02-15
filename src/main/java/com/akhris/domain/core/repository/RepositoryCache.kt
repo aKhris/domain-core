@@ -10,7 +10,7 @@ class RepositoryCache<PRIMARY_KEY : Any, T : IEntity<PRIMARY_KEY>>(private val m
     suspend fun getFromCacheOrFetch(id: PRIMARY_KEY, fetcher: suspend (PRIMARY_KEY) -> T): T {
         val cacheItem = cache[id]
         return if (cacheItem == null) {
-            println("not found item for id: $id in cache, fetching from repo...")
+//            println("not found item for id: $id in cache, fetching from repo...")
             val fetched = fetcher(id)
             putKeepingMaxCapacity(fetched)
             fetched
@@ -20,17 +20,17 @@ class RepositoryCache<PRIMARY_KEY : Any, T : IEntity<PRIMARY_KEY>>(private val m
     }
 
     fun insert(item: T) {
-        println("updating item (id: ${item.id}) in cache")
+//        println("updating item (id: ${item.id}) in cache")
         putKeepingMaxCapacity(item)
     }
 
     fun remove(id: PRIMARY_KEY) {
-        println("removing item (id: $id) from cache")
+//        println("removing item (id: $id) from cache")
         cache.remove(id)
     }
 
     private fun putKeepingMaxCapacity(item: T) {
-        println("put item: $item in cache")
+//        println("put item: $item in cache")
         cache[item.id] = CacheItem(item = item, timeStamp = System.currentTimeMillis())
         if (cache.size > maxCapacity) {
             //remove the oldest item
@@ -40,7 +40,7 @@ class RepositoryCache<PRIMARY_KEY : Any, T : IEntity<PRIMARY_KEY>>(private val m
                     .sortedBy { i -> i.value.timeStamp }[0]
                     .key
 
-            println("cache size > $maxCapacity, removing the oldest item with id: $oldestKey")
+//            println("cache size > $maxCapacity, removing the oldest item with id: $oldestKey")
             remove(oldestKey)
         }
     }
