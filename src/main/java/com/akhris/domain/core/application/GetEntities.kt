@@ -7,7 +7,7 @@ import com.akhris.domain.core.repository.ISpecification
 import kotlinx.coroutines.CoroutineDispatcher
 
 class GetEntities<ID, ENTITY : IEntity<ID>>(
-    private val repo: IRepository<ID, ENTITY>,
+    val repo: IRepository<ID, ENTITY>,
     @IoDispatcher
     ioDispatcher: CoroutineDispatcher
 ) : UseCase<List<ENTITY>, GetEntities.Params>(ioDispatcher) {
