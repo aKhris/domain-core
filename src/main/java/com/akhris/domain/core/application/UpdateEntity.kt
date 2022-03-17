@@ -1,5 +1,6 @@
 package com.akhris.domain.core.application
 
+import com.akhris.domain.core.application.Result
 import com.akhris.domain.core.di.IoDispatcher
 import com.akhris.domain.core.entities.IEntity
 import com.akhris.domain.core.repository.IRepository
@@ -14,11 +15,13 @@ open class UpdateEntity<ID, ENTITY : IEntity<ID>>(
     private val repo: IRepository<ID, ENTITY>,
     @IoDispatcher
     ioDispatcher: CoroutineDispatcher
-) : UseCase<ENTITY, UpdateEntity.Params<ENTITY>>(ioDispatcher) {
+) : UseCase<ENTITY, UpdateEntity.Params>(ioDispatcher) {
 
-    override suspend fun run(params: Params<ENTITY>): ENTITY {
+    override suspend fun run(params: Params): ENTITY {
         return when (params) {
-            is Update -> update(params.entityToUpdate)
+            is Update -> (params.entityToUpdate as? ENTITY)?.let {
+                update(it)
+            } ?: throw IllegalArgumentException("Entity to update is not type of updater use case: $this")
         }
     }
 
@@ -27,7 +30,7 @@ open class UpdateEntity<ID, ENTITY : IEntity<ID>>(
         return entity
     }
 
-    sealed class Params<T>
-    data class Update<E>(val entityToUpdate: E) : Params<E>()
+    sealed class Params
+    data class Update(val entityToUpdate: Any) : Params()
 
 }
