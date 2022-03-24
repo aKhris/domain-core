@@ -13,11 +13,12 @@ open class RemoveEntity<ID, ENTITY : IEntity<ID>>(
     private val repo: IRepository<ID, ENTITY>,
     @IoDispatcher
     ioDispatcher: CoroutineDispatcher
-) : UseCase<ENTITY, RemoveEntity.Params<ENTITY>>(ioDispatcher) {
+) : UseCase<ENTITY, RemoveEntity.Params>(ioDispatcher) {
 
-    override suspend fun run(params: Params<ENTITY>): ENTITY {
+    override suspend fun run(params: Params): ENTITY {
         return when (params) {
-            is Remove -> remove(params.entityToRemove)
+            is Remove -> (params.entityToRemove as? ENTITY)?.let { remove(params.entityToRemove) }
+                ?: throw IllegalArgumentException("Entity to remove is not type of remove use case: $this")
         }
     }
 
@@ -26,7 +27,7 @@ open class RemoveEntity<ID, ENTITY : IEntity<ID>>(
         return entity
     }
 
-    sealed class Params<T>
-    data class Remove<E>(val entityToRemove: E) : Params<E>()
+    sealed class Params
+    data class Remove(val entityToRemove: Any) : Params()
 
 }
