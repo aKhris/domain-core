@@ -13,11 +13,12 @@ open class InsertEntity<ID, ENTITY : IEntity<ID>>(
     private val repo: IRepository<ID, ENTITY>,
     @IoDispatcher
     ioDispatcher: CoroutineDispatcher
-) : UseCase<ENTITY, InsertEntity.Params<ENTITY>>(ioDispatcher) {
+) : UseCase<ENTITY, InsertEntity.Params>(ioDispatcher) {
 
-    override suspend fun run(params: Params<ENTITY>): ENTITY {
+    override suspend fun run(params: Params): ENTITY {
         return when (params) {
-            is Insert -> insert(params.entityToInsert)
+            is Insert -> (params.entityToInsert as? ENTITY)?.let { insert(params.entityToInsert) }
+                ?: throw IllegalArgumentException("Entity to insert is not type of insert use case: $this")
         }
     }
 
@@ -26,7 +27,7 @@ open class InsertEntity<ID, ENTITY : IEntity<ID>>(
         return entity
     }
 
-    sealed class Params<T>
-    data class Insert<E>(val entityToInsert: E) : Params<E>()
+    sealed class Params
+    data class Insert(val entityToInsert: Any) : Params()
 
 }
